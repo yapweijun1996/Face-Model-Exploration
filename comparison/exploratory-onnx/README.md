@@ -1,5 +1,9 @@
 # Local EdgeFace and AuraFace exploratory comparison
 
+This guide covers the combined ONNX experiment. It requires both models; an
+AuraFace-only runner is not implemented. See [BUSINESS-MODEL-TESTING.md](../BUSINESS-MODEL-TESTING.md)
+for commercial-use candidates and a staged evaluation plan.
+
 This independent pipeline reads `../multi-person/manifest.csv` and the prior `multi-person-results/multi-comparison-2026-10-27T09-34-58-670808Z.json`. It verifies that their manifest SHA-256 values match. It never writes to either dataset or prior results. A run creates a fresh directory under `../exploratory-runs/` containing `report.json` and `report.html`; open the HTML directly to review pairs of local photos. It includes prior scores, new cosine scores, detection/inference errors and score distributions. Embeddings and crops are kept in memory and are not saved. No network access is used during inference.
 
 Intended same/different labels in this synthetic dataset are unverified, not ground truth. Cosines are not probabilities. This experiment makes no match decision for the two new models and cannot establish accuracy, liveness or security. Previous engine decisions and thresholds remain in the original report. Face-API distance and the cosine scores have different scales. The new models' ONNX inference call timings exclude detection, decoding, alignment and model loading, include a cold first inference and cannot be compared directly to the earlier end-to-end pipeline times.
@@ -25,7 +29,8 @@ YuNet uses score 0.9, NMS 0.3, top-k 5000 and maximum dimension 640, requiring e
 
 ## Run
 
-From this directory after obtaining the assets and dependencies:
+From `comparison/exploratory-onnx` after obtaining the listed assets and a
+compatible Python environment, install the locked Node dependencies and run:
 
 ```powershell
 npm ci --ignore-scripts --no-audit --no-fund
@@ -33,3 +38,8 @@ node run.js
 ```
 
 The report path is printed. Exit 1 means setup failed; exit 2 means a report was produced with detection or inference errors. A missing or mismatched asset prevents a run before output creation. The pipeline is deliberately fixed to the existing manifest and prior run; inspect their provenance before relying on the comparison. Run focused tests without model files with `node --test test.js` and `python -B test_prepare.py`.
+
+Inspect errors, incomplete pairs and score distributions before interpreting
+the report. If setup fails, check asset hashes, the prior result and manifest,
+Node version and Python packages. The runtime versions above describe the
+verified environment; other OS and hardware combinations need separate checks.

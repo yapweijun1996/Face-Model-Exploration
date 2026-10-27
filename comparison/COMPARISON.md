@@ -1,5 +1,25 @@
 ﻿# Local comparison smoke test
 
+This guide covers the single-person dataset and local Face-API WASM and SFace
+runners. It is an exploratory smoke test. For the planned business-use model
+evaluation, see [BUSINESS-MODEL-TESTING.md](BUSINESS-MODEL-TESTING.md).
+
+## Prerequisites and preparation
+
+- Run commands from the repository root unless stated otherwise.
+- Face-API requires Node.js, locked `comparison/package-lock.json`
+  dependencies and local Face-API model files.
+- SFace requires Python 3, NumPy and OpenCV with `FaceDetectorYN` and
+  `FaceRecognizerSF`, plus YuNet and SFace model files. Python dependencies are
+  not locked; record the actual versions used.
+- `download.py` fetches public assets and checks the pinned ONNX hashes. It
+  also fetches Face-API assets. Setup requires network access; the offline
+  batch runners use local files.
+- Examples use Windows PowerShell. Verify dependency availability and commands
+  separately on Linux and macOS.
+
+## Existing observations
+
 Both offline pipelines completed the 40-image smoke test. The intended same-person probes were matched in 29/29 cases by both pipelines. Of 10 intended different-person probes, Face-API matched 5 and SFace matched 4. Face-API used a distance threshold of 0.6; SFace used a cosine similarity threshold of 0.363. The labels have not been independently verified and the images are synthetic; these counts do not establish real-world accuracy, liveness, or security. See the timestamped `results-face-wasm-*.json` and `results-sface-*.json` files for individual scores and statuses.
 
 ## Offline Face-API WASM batch runner
@@ -26,6 +46,11 @@ Verify the output reports `backend: wasm`, all 40 rows, and the status counts be
 ## Offline SFace batch runner
 
 With Python 3 and OpenCV installed, run `python -B run-sface.py` from this directory. It writes a new timestamped results file without overwriting previous runs. The two tested SFace runs gave the same grouped outcomes. The Python/OpenCV and Node/WASM pipelines have different detectors, image preprocessing, and runtimes; their timing is not an apples-to-apples browser performance benchmark.
+
+Inspect all 40 rows, enrollment, detection and error statuses in the saved
+JSON. Exit zero does not guarantee that every image contains exactly one
+detected face. Missing or invalid model assets can prevent a result from being
+created; check filenames, hashes and installed OpenCV capabilities first.
 
 ## Legacy browser and SFace setup
 

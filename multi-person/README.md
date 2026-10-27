@@ -1,5 +1,9 @@
 # Synthetic multi-person comparison dataset
 
+For preparation, commands and expected output, use the [multi-person comparison
+guide](../comparison/MULTI-PERSON.md). Selected visual observations are in
+[REVIEW-NOTES.md](REVIEW-NOTES.md).
+
 This dataset has 20 independently generated fictional adult reference portraits.
 For each reference, four individually generated images were requested to show the
 same fictional person in different conditions: a head turn, an outdoor smile,

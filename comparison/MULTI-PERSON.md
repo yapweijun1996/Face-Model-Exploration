@@ -1,5 +1,19 @@
 # Multi-person exploratory comparison
 
+This guide covers the existing Face-API WASM and SFace comparison on the
+[synthetic multi-person dataset](../multi-person/README.md). The test uses
+intended labels and example thresholds, not independently verified identities.
+
+## Prerequisites
+
+Prepare the Node dependencies and model assets from [COMPARISON.md](COMPARISON.md).
+Python requires NumPy and an OpenCV build with YuNet and SFace support; the
+Python environment is not locked. Record OS and runtime versions. After setup,
+batch inference uses local assets. The example uses Windows PowerShell; other
+platforms require verification.
+
+## Run and inspect results
+
 From the repository root, run both local engines on `../multi-person/manifest.csv`, then open the generated HTML report:
 
 ```powershell
@@ -14,6 +28,8 @@ The exact CSV headers are `person_id,image,role,scenario,identity_review`. The e
 The existing locked Node dependencies and local models described in [COMPARISON.md](COMPARISON.md) are used without network access. Python needs NumPy and OpenCV with YuNet and SFace support; its OpenCV version is recorded, but this environment is not locked by the project. Face-API checks that both TF.js and Face-API share the WASM engine before and after inference. Face-API uses SSD MobileNet V1 (0.5 confidence), landmarks and Euclidean distance ≤ 0.6; SFace uses YuNet (0.9 confidence), 640-pixel maximum dimension, aligned SFace features and cosine similarity ≥ 0.363. Multiple detected faces are excluded. The report records runtime versions, detector settings, the manifest SHA-256 and model SHA-256 values.
 
 The thresholds are examples, not calibrated on this dataset. There is no assumed calibration/evaluation split. Intended same/different labels are not ground truth; the synthetic set cannot establish accuracy, liveness or security. The score scales differ. Node WASM and Python/OpenCV have different detectors, preprocessing and runtimes, so their timings are not a fair speed comparison; the multi-person report makes no speed claim. Complete image generation and independent identity review are separate prerequisites for interpreting the full dataset.
+
+## Saved observation
 
 The saved `multi-comparison-2026-10-27T09-34-58-670808Z.json` contains
 100 detected images per engine and 1,600 scored pairs. Both engines matched
