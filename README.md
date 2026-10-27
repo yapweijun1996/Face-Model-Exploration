@@ -1,4 +1,42 @@
-# Synthetic Face Recognition Spike Dataset
+# Face Model Exploration
+
+This repository compares four local face-recognition pipelines on synthetic
+portraits. It is an exploratory inference and reporting project: it does not
+train or fine-tune a model and is not a production identity-verification system.
+
+## Pipelines
+
+| Pipeline | Runtime | Comparison |
+| --- | --- | --- |
+| Face-API | Node.js and TensorFlow.js WASM | Euclidean distance; example threshold 0.6 |
+| SFace | Python and OpenCV | Cosine similarity; example threshold 0.363 |
+| EdgeFace XS | Node.js and ONNX Runtime CPU | Cosine similarity; no match threshold |
+| AuraFace | Node.js and ONNX Runtime CPU | Cosine similarity; no match threshold |
+
+Face-API uses SSD MobileNet V1 detection and 68-point landmarks. The other
+pipelines use YuNet detection; the EdgeFace and AuraFace experiment uses
+five-point alignment before inference. Detection, preprocessing and runtimes
+differ, so model scores and recorded timings are not directly interchangeable.
+The optional Face-API rerun in the browser uses CPU, not WASM.
+
+## Guides and saved results
+
+- [Single-person comparison and setup](comparison/COMPARISON.md): 40 images,
+  Face-API WASM and SFace results, and local server instructions.
+- [Multi-person dataset](multi-person/README.md) and
+  [comparison guide](comparison/MULTI-PERSON.md): 20 intended identities and
+  100 images, with each probe compared against every enrollment.
+- [EdgeFace and AuraFace guide](comparison/exploratory-onnx/README.md):
+  model assets, licensing, preprocessing and four-model reports.
+
+Saved results are exploratory observations, not validated accuracy or security
+measurements. Intended identity labels remain unverified, and comparisons
+reuse images and identities. No liveness or spoof-resistance test is included.
+Model files and installed dependencies are not committed; obtain them separately
+as described in the guides. The local server has no user authentication and is
+not suitable as a security boundary for sensitive biometric data.
+
+## Single-person dataset
 
 This folder contains 30 separately generated PNG images, `face-01.png` through
 `face-30.png`, intended to depict the same fictional adult. `face-01.png` is the

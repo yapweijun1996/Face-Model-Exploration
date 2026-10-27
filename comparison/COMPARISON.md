@@ -13,10 +13,10 @@ The direct dependencies are pinned in `package.json` and transitive dependencies
 - https://registry.npmjs.org/@tensorflow/tfjs-backend-wasm/-/tfjs-backend-wasm-4.22.0.tgz
 - https://registry.npmjs.org/pngjs/-/pngjs-5.0.0.tgz
 
-Install the locked dependencies and run with lifecycle scripts disabled:
+From the repository root, install the locked dependencies and run with lifecycle scripts disabled:
 
 ```powershell
-cd 'C:\Users\tno\Documents\GitHub\Github-Repo-Study\faceapi wasm\comparison'
+cd comparison
 npm.cmd ci --ignore-scripts --no-audit --no-fund
 node face-wasm.js
 ```
@@ -31,10 +31,10 @@ With Python 3 and OpenCV installed, run `python -B run-sface.py` from this direc
 
 The page first displays the latest saved Face-API WASM and SFace results side by side, with the enrollment image, per-photo scores and thresholds, and filters for intended same- and different-person probes. Summary percentages use only completed matched or not-matched probes as the denominator; unavailable probes are reported separately. These rates describe this unverified synthetic set and are not per-image identity probabilities. The separate optional browser rerun below uses the Face-API CPU backend; it does not rerun the offline WASM batch.
 
-Requires Python 3, NumPy and OpenCV Python with `FaceDetectorYN` and `FaceRecognizerSF` (the implementation machine has Python 3.13 and OpenCV 5.0.0). An existing compatible environment is sufficient; if missing, use a project-local virtual environment and install a suitable pinned OpenCV package and NumPy, without global installation. Download public assets once from a network-enabled environment:
+Requires Python 3, NumPy and OpenCV Python with `FaceDetectorYN` and `FaceRecognizerSF` (the implementation machine has Python 3.13 and OpenCV 5.0.0). An existing compatible environment is sufficient; if missing, use a project-local virtual environment and install a suitable pinned OpenCV package and NumPy, without global installation. From the repository root, download public assets once from a network-enabled environment:
 
 ```powershell
-cd 'C:\Users\tno\Documents\GitHub\Github-Repo-Study\faceapi wasm\comparison'
+cd comparison
 python -B download.py
 python -B server.py
 ```

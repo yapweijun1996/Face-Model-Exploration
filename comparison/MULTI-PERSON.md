@@ -1,9 +1,9 @@
 # Multi-person exploratory comparison
 
-Run both local engines on `../multi-person/manifest.csv`, then open the generated HTML report:
+From the repository root, run both local engines on `../multi-person/manifest.csv`, then open the generated HTML report:
 
 ```powershell
-cd 'C:\Users\tno\Documents\GitHub\Github-Repo-Study\faceapi wasm\comparison'
+cd comparison
 python -B multi-compare.py
 ```
 
@@ -14,6 +14,12 @@ The exact CSV headers are `person_id,image,role,scenario,identity_review`. The e
 The existing locked Node dependencies and local models described in [COMPARISON.md](COMPARISON.md) are used without network access. Python needs NumPy and OpenCV with YuNet and SFace support; its OpenCV version is recorded, but this environment is not locked by the project. Face-API checks that both TF.js and Face-API share the WASM engine before and after inference. Face-API uses SSD MobileNet V1 (0.5 confidence), landmarks and Euclidean distance ≤ 0.6; SFace uses YuNet (0.9 confidence), 640-pixel maximum dimension, aligned SFace features and cosine similarity ≥ 0.363. Multiple detected faces are excluded. The report records runtime versions, detector settings, the manifest SHA-256 and model SHA-256 values.
 
 The thresholds are examples, not calibrated on this dataset. There is no assumed calibration/evaluation split. Intended same/different labels are not ground truth; the synthetic set cannot establish accuracy, liveness or security. The score scales differ. Node WASM and Python/OpenCV have different detectors, preprocessing and runtimes, so their timings are not a fair speed comparison; the multi-person report makes no speed claim. Complete image generation and independent identity review are separate prerequisites for interpreting the full dataset.
+
+The saved `multi-comparison-2026-10-27T09-34-58-670808Z.json` contains
+100 detected images per engine and 1,600 scored pairs. Both engines matched
+all 80 intended-same pairs. Face-API matched 166 of 1,520 intended-different
+pairs; SFace matched 242. These counts use the example thresholds and pending
+labels above; they are not validated false-accept rates.
 
 The report includes a paginated visual review of intended different-person pairs, filterable by whether both engines matched or only one did. It displays the probe and reference images side by side and retains their model scores. Visual resemblance and model outputs do not establish identity, so this review does not change the pending identity labels.
 
