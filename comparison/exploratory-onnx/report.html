@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Local face model exploration</title>
+<style>
+body{font:16px system-ui,sans-serif;margin:2rem;max-width:1100px}label{margin-right:1rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left}img{width:150px;max-height:180px;object-fit:contain;background:#eee}.pair{border:1px solid #bbb;padding:1rem;margin:1rem 0}.photos{display:flex;gap:1rem;flex-wrap:wrap}pre{white-space:pre-wrap;overflow-wrap:anywhere}button,select{padding:.4rem}.notice{background:#fff6d6;padding:1rem}
+</style></head><body>
+<h1>Local face model exploration</h1>
+<p class="notice">Exploratory scores only. Intended identity labels are unverified and are not ground truth. No new-model match thresholds or probability claims. Prior Face-API scores are Euclidean distances; SFace, EdgeFace and AuraFace scores are cosine similarities. Detectors and preprocessing differ.</p>
+<h2>Score distributions</h2><p>Quantiles summarize available scores only; counts may differ when detection or inference fails. Face-API distance is lower for closer faces; all other scores are cosine similarities, where higher is closer. Scores from different models cannot be directly compared.</p><div id="summary"></div>
+<h2>Node.js model inference time</h2><p>Milliseconds for the ONNX model call only, excluding image decoding, YuNet detection, alignment, and model loading. One run includes the first inference and is not a production benchmark. Do not compare these values with the older full-pipeline times.</p><div id="timing"></div>
+<h2>Images and detection errors</h2><div id="errors"></div>
+<h2>Side-by-side review</h2>
+<label>Relationship <select id="relation"><option value="">All</option><option>intended same</option><option>intended different</option></select></label>
+<label>Probe person <select id="person"><option value="">All</option></select></label>
+<button id="prev">Previous</button> <button id="next">Next</button> <span id="page"></span><div id="pairs"></div>
+<details><summary>Runtime and provenance metadata</summary><pre id="metadata"></pre></details>
+<script>
+/* DATA */
+const element = (tag, value) => { const el = document.createElement(tag); if (value !== undefined) el.textContent = value; return el; };
+const show = value => value == null ? 'unavailable' : Number(value).toFixed(6);
+const summary = document.getElementById('summary'), table = element('table');
+const heading = element('tr'); for (const t of ['Model','Intended relation','Count','Min','P25','Median','P75','Max']) heading.append(element('th',t)); table.append(heading);
+const priorDistributions = {};
+for (const model of ['face_wasm', 'sface']) {
+ priorDistributions[model] = {};
+ for (const relation of ['intended same', 'intended different']) {
+  const values = DATA.comparisons.filter(pair => pair.relation === relation).map(pair => pair.prior_scores[model]).filter(Number.isFinite).sort((a,b) => a-b);
+  const quantile = q => { if (!values.length) return null; const i=(values.length-1)*q, lo=Math.floor(i), hi=Math.ceil(i); return values[lo]+(values[hi]-values[lo])*(i-lo); };
+  priorDistributions[model][relation] = {count:values.length,min:quantile(0),p25:quantile(.25),median:quantile(.5),p75:quantile(.75),max:quantile(1)};
+ }
+}
+for (const [model, groups] of Object.entries({...priorDistributions, ...DATA.distributions})) for (const [relation, d] of Object.entries(groups)) { const tr = element('tr'); for (const v of [model, relation, d.count, show(d.min), show(d.p25), show(d.median), show(d.p75), show(d.max)]) tr.append(element('td',v)); table.append(tr); } summary.append(table);
+const timingTable = element('table'), timingHeading = element('tr');
+for (const t of ['Model', 'Count', 'Min ms', 'P25 ms', 'Median ms', 'P75 ms', 'Max ms']) timingHeading.append(element('th', t)); timingTable.append(timingHeading);
+for (const [model, d] of Object.entries(DATA.inference_ms || {})) { const tr=element('tr'); for (const value of [model, d.count, show(d.min), show(d.p25), show(d.median), show(d.p75), show(d.max)]) tr.append(element('td',value)); timingTable.append(tr); }
+document.getElementById('timing').append(timingTable);
+const errors = DATA.rows.map((r,i) => ({...r, image: DATA.manifest[i].image})).filter(r => r.status !== 'detected' || Object.keys(r.inference_errors).length);
+document.getElementById('errors').append(element('pre', errors.length ? JSON.stringify(errors,null,2) : 'No detection or inference errors.'));
+document.getElementById('metadata').textContent = JSON.stringify(DATA.metadata,null,2);
+const people = [...new Set(DATA.comparisons.map(p => p.probe_person_id))].sort();
+for (const p of people) { const option = element('option',p); option.value = p; document.getElementById('person').append(option); }
+let page = 0;
+function image(file, title) { const box = element('div'); box.append(element('p',title)); if (file) { const img = element('img'); img.alt = title; img.src = DATA.imageBase + '/' + file.split('/').map(encodeURIComponent).join('/'); box.append(img); } return box; }
+function render() {
+ const relation = document.getElementById('relation').value, person = document.getElementById('person').value;
+ const list = DATA.comparisons.filter(p => (!relation || p.relation === relation) && (!person || p.probe_person_id === person));
+ const pages = Math.max(1,Math.ceil(list.length / 10)); page = Math.min(Math.max(page,0),pages-1);
+ document.getElementById('page').textContent = `Page ${page+1} of ${pages}; ${list.length} pairs`;
+ const container = document.getElementById('pairs'); container.replaceChildren();
+ for (const p of list.slice(page*10,page*10+10)) {
+  const card=element('article'); card.className='pair'; card.append(element('h3',`${p.probe_person_id} / ${p.enrollment_person_id} — ${p.relation}`));
+  const photos=element('div'); photos.className='photos'; photos.append(image(p.probe_image,`Probe: ${p.probe_image}`),image(p.enrollment_image,`Enrollment: ${p.enrollment_image || 'missing'}`)); card.append(photos);
+  card.append(element('p',`EdgeFace cosine: ${show(p.scores.edgeface)} | AuraFace cosine: ${show(p.scores.auraface)} | Prior SFace cosine: ${show(p.prior_scores.sface)} | Prior Face-API distance: ${show(p.prior_scores.face_wasm)}`));
+  for (const [side,r] of Object.entries(p.errors)) if (!r || r.status !== 'detected' || Object.keys(r.inference_errors).length) card.append(element('pre',`${side}: ${JSON.stringify(r)}`));
+  container.append(card);
+ }
+}
+for (const id of ['relation','person']) document.getElementById(id).onchange=()=>{page=0;render();};
+document.getElementById('prev').onclick=()=>{page--;render();}; document.getElementById('next').onclick=()=>{page++;render();}; render();
+</script></body></html>

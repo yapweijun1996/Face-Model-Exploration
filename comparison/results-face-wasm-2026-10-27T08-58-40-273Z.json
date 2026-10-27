@@ -1,0 +1,341 @@
+{
+  "backend": "wasm",
+  "tfjs": "4.22.0",
+  "face_api": "1.7.15",
+  "reference": "face-01.png",
+  "distance_threshold": 0.6,
+  "elapsed_ms": 58394.5,
+  "summary": {
+    "enrollment": {
+      "enrolled": 1
+    },
+    "same": {
+      "matched": 29
+    },
+    "different": {
+      "not matched": 5,
+      "matched": 5
+    }
+  },
+  "rows": [
+    {
+      "image": "face-01.png",
+      "intended": "enrollment",
+      "detection_score": 0.9997850656509399,
+      "status": "enrolled",
+      "ms": 2989.8
+    },
+    {
+      "image": "face-02.png",
+      "intended": "same",
+      "detection_score": 0.9995796084403992,
+      "score": 0.17132394785030133,
+      "status": "matched",
+      "ms": 1735.5
+    },
+    {
+      "image": "face-03.png",
+      "intended": "same",
+      "detection_score": 0.9996683597564697,
+      "score": 0.17197187566996394,
+      "status": "matched",
+      "ms": 2187.7
+    },
+    {
+      "image": "face-04.png",
+      "intended": "same",
+      "detection_score": 0.999839723110199,
+      "score": 0.17002269691125438,
+      "status": "matched",
+      "ms": 2146
+    },
+    {
+      "image": "face-05.png",
+      "intended": "same",
+      "detection_score": 0.9998559355735779,
+      "score": 0.13796177841208979,
+      "status": "matched",
+      "ms": 1577.8
+    },
+    {
+      "image": "face-06.png",
+      "intended": "same",
+      "detection_score": 0.9997864365577698,
+      "score": 0.17501100056202765,
+      "status": "matched",
+      "ms": 1613.6
+    },
+    {
+      "image": "face-07.png",
+      "intended": "same",
+      "detection_score": 0.999775230884552,
+      "score": 0.19335959102324876,
+      "status": "matched",
+      "ms": 1894.1
+    },
+    {
+      "image": "face-08.png",
+      "intended": "same",
+      "detection_score": 0.9996549487113953,
+      "score": 0.19540564086608195,
+      "status": "matched",
+      "ms": 1592.8
+    },
+    {
+      "image": "face-09.png",
+      "intended": "same",
+      "detection_score": 0.9997851848602295,
+      "score": 0.2000198285183232,
+      "status": "matched",
+      "ms": 1537.2
+    },
+    {
+      "image": "face-10.png",
+      "intended": "same",
+      "detection_score": 0.9996483325958252,
+      "score": 0.20249522415781532,
+      "status": "matched",
+      "ms": 1705.3
+    },
+    {
+      "image": "face-11.png",
+      "intended": "same",
+      "detection_score": 0.9997933506965637,
+      "score": 0.24826820930933394,
+      "status": "matched",
+      "ms": 1698.3
+    },
+    {
+      "image": "face-12.png",
+      "intended": "same",
+      "detection_score": 0.9998229742050171,
+      "score": 0.21645284611398805,
+      "status": "matched",
+      "ms": 2250
+    },
+    {
+      "image": "face-13.png",
+      "intended": "same",
+      "detection_score": 0.9997804760932922,
+      "score": 0.09168410355636365,
+      "status": "matched",
+      "ms": 1883.9
+    },
+    {
+      "image": "face-14.png",
+      "intended": "same",
+      "detection_score": 0.9997713565826416,
+      "score": 0.07925540713127553,
+      "status": "matched",
+      "ms": 2299.3
+    },
+    {
+      "image": "face-15.png",
+      "intended": "same",
+      "detection_score": 0.9997802972793579,
+      "score": 0.08085851165713248,
+      "status": "matched",
+      "ms": 2768.9
+    },
+    {
+      "image": "face-16.png",
+      "intended": "same",
+      "detection_score": 0.9997609853744507,
+      "score": 0.08998079760020221,
+      "status": "matched",
+      "ms": 1818.6
+    },
+    {
+      "image": "face-17.png",
+      "intended": "same",
+      "detection_score": 0.9997902512550354,
+      "score": 0.13902476718068876,
+      "status": "matched",
+      "ms": 1864
+    },
+    {
+      "image": "face-18.png",
+      "intended": "same",
+      "detection_score": 0.9997904896736145,
+      "score": 0.07681947404777337,
+      "status": "matched",
+      "ms": 1174.2
+    },
+    {
+      "image": "face-19.png",
+      "intended": "same",
+      "detection_score": 0.9997749924659729,
+      "score": 0.2332478462167548,
+      "status": "matched",
+      "ms": 991.5
+    },
+    {
+      "image": "face-20.png",
+      "intended": "same",
+      "detection_score": 0.9997793436050415,
+      "score": 0.19107599980186132,
+      "status": "matched",
+      "ms": 933.4
+    },
+    {
+      "image": "face-21.png",
+      "intended": "same",
+      "detection_score": 0.9998942017555237,
+      "score": 0.14199659407842682,
+      "status": "matched",
+      "ms": 1009
+    },
+    {
+      "image": "face-22.png",
+      "intended": "same",
+      "detection_score": 0.9998806715011597,
+      "score": 0.11257020743775623,
+      "status": "matched",
+      "ms": 1204.6
+    },
+    {
+      "image": "face-23.png",
+      "intended": "same",
+      "detection_score": 0.9998254776000977,
+      "score": 0.12223410740564235,
+      "status": "matched",
+      "ms": 924
+    },
+    {
+      "image": "face-24.png",
+      "intended": "same",
+      "detection_score": 0.9997884631156921,
+      "score": 0.1292462755730971,
+      "status": "matched",
+      "ms": 968.1
+    },
+    {
+      "image": "face-25.png",
+      "intended": "same",
+      "detection_score": 0.9998153448104858,
+      "score": 0.15594064535458885,
+      "status": "matched",
+      "ms": 1009.6
+    },
+    {
+      "image": "face-26.png",
+      "intended": "same",
+      "detection_score": 0.9997794032096863,
+      "score": 0.15390807908390633,
+      "status": "matched",
+      "ms": 1153.5
+    },
+    {
+      "image": "face-27.png",
+      "intended": "same",
+      "detection_score": 0.9998152256011963,
+      "score": 0.08681702823327724,
+      "status": "matched",
+      "ms": 1474.4
+    },
+    {
+      "image": "face-28.png",
+      "intended": "same",
+      "detection_score": 0.9998354911804199,
+      "score": 0.08216138543965021,
+      "status": "matched",
+      "ms": 972.3
+    },
+    {
+      "image": "face-29.png",
+      "intended": "same",
+      "detection_score": 0.9997449517250061,
+      "score": 0.0765035439333331,
+      "status": "matched",
+      "ms": 882
+    },
+    {
+      "image": "face-30.png",
+      "intended": "same",
+      "detection_score": 0.9997864365577698,
+      "score": 0.1529198383714991,
+      "status": "matched",
+      "ms": 1067.7
+    },
+    {
+      "image": "negative-01.png",
+      "intended": "different",
+      "detection_score": 0.9995263814926147,
+      "score": 0.8526011216229007,
+      "status": "not matched",
+      "ms": 1173.8
+    },
+    {
+      "image": "negative-02.png",
+      "intended": "different",
+      "detection_score": 0.9997615218162537,
+      "score": 0.7552779974897283,
+      "status": "not matched",
+      "ms": 864.2
+    },
+    {
+      "image": "negative-03.png",
+      "intended": "different",
+      "detection_score": 0.9998063445091248,
+      "score": 0.7738702958075228,
+      "status": "not matched",
+      "ms": 927.5
+    },
+    {
+      "image": "negative-04.png",
+      "intended": "different",
+      "detection_score": 0.9995412230491638,
+      "score": 0.8820430683338297,
+      "status": "not matched",
+      "ms": 999
+    },
+    {
+      "image": "negative-05.png",
+      "intended": "different",
+      "detection_score": 0.9998418092727661,
+      "score": 0.8788758276393588,
+      "status": "not matched",
+      "ms": 1151.5
+    },
+    {
+      "image": "negative-06.png",
+      "intended": "different",
+      "detection_score": 0.9999098777770996,
+      "score": 0.3654186143163597,
+      "status": "matched",
+      "ms": 1237.3
+    },
+    {
+      "image": "negative-07.png",
+      "intended": "different",
+      "detection_score": 0.9996604919433594,
+      "score": 0.2974160106352312,
+      "status": "matched",
+      "ms": 1153.5
+    },
+    {
+      "image": "negative-08.png",
+      "intended": "different",
+      "detection_score": 0.9998759627342224,
+      "score": 0.3958624276894259,
+      "status": "matched",
+      "ms": 976.1
+    },
+    {
+      "image": "negative-09.png",
+      "intended": "different",
+      "detection_score": 0.9998006224632263,
+      "score": 0.24018222234832456,
+      "status": "matched",
+      "ms": 1010.6
+    },
+    {
+      "image": "negative-10.png",
+      "intended": "different",
+      "detection_score": 0.9998041391372681,
+      "score": 0.5172479583936106,
+      "status": "matched",
+      "ms": 997.8
+    }
+  ]
+}

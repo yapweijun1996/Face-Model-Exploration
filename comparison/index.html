@@ -1,0 +1,31 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Face-API / SFace synthetic comparison</title>
+<style>
+body{font:16px system-ui,sans-serif;max-width:1200px;margin:2rem auto;padding:0 1rem;color:#172232;background:#f5f7fa}button{padding:.7rem 1.1rem;font:inherit;cursor:pointer}p{line-height:1.5}.notice{background:#fff3d8;padding:1rem;border-radius:10px}.panel{margin:1.5rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem}td,th{padding:.45rem;border-bottom:1px solid #ccd5df;text-align:left}th{background:#edf2f6}pre{white-space:pre-wrap} .scroll{overflow:auto}.overview{display:flex;flex-wrap:wrap;gap:16px}.reference,.metric,.card{background:white;border:1px solid #d9e2ee;border-radius:12px;padding:14px}.reference img{width:120px;height:120px;object-fit:cover;border-radius:8px}.metric{flex:1;min-width:220px}.metric h3{margin:0 0 .6rem}.metric-line{margin:.55rem 0}.metric-line span,.metric-line strong,.metric-line small{display:block}.metric-line strong{font-size:1.25rem}.metric-line small,.score-detail{color:#55677d}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}.card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px}.card h3{margin:.6rem 0}.card p{margin:.25rem 0;font-size:.9rem}.matched{color:#a33220;font-weight:650}.unmatched{color:#087b5e;font-weight:650}.filter{display:flex;gap:8px;flex-wrap:wrap}.filter button[aria-pressed=true]{background:#233e75;color:white}.muted{color:#55677d;font-size:.9rem}
+</style>
+<script src="/app.js" defer></script>
+</head>
+<body>
+<h1>Face-API / SFace comparison</h1>
+<p><a href="/four-models">Open the four-model comparison</a></p>
+<p><a href="/multi-report">Open the 20-person comparison report</a></p>
+<p class="notice">Synthetic identities are intended labels and have not been verified. These results are a smoke test, not real-world accuracy or a liveness test. Scores and timing are specific to each pipeline and cannot be compared directly.</p>
+<section aria-labelledby="saved-title"><h2 id="saved-title">Saved WASM vs SFace results</h2>
+<p>Both engines compare each image with the same enrollment photo. A match for an intended different person is highlighted for review.</p>
+<div class="overview"><div class="reference"><img src="/images/face-01.png" alt="Enrollment reference face"><div>Enrollment · face-01</div></div><div class="metric" id="wasm-metric">Loading Face-API WASM…</div><div class="metric" id="sface-metric">Loading SFace…</div></div>
+<p class="muted">Percentages are the share of completed probes in this small, unverified synthetic set, not a probability that an individual is the same person. Different-person matches may be false matches if the intended labels are correct.</p>
+<p class="muted">Face-API: Euclidean distance ≤ 0.6 means match; lower is closer. SFace: cosine similarity ≥ 0.363 means match; higher is closer. These scores use different scales and are not probabilities. The saved results used Node WASM and Python OpenCV, respectively.</p>
+<div class="filter" aria-label="Filter images"><button type="button" data-filter="different" aria-pressed="true">Different people (10)</button><button type="button" data-filter="same" aria-pressed="false">Same person (29)</button><button type="button" data-filter="all" aria-pressed="false">All probes</button></div>
+<p id="saved-status" role="status">Loading saved results…</p><div id="saved-grid" class="grid"></div></section>
+<hr><h2>Optional browser CPU rerun</h2>
+<p>Enrollment: face-01. Probes: face-02–30 intended same person; negative-01–10 intended different people. Missing images are excluded from recognition and detection counts. Images remain local.</p>
+<p>Face-API: SSD MobileNet V1 + 68 landmarks + descriptor, Euclidean distance ≤ 0.6. SFace: YuNet + alignCrop + SFace, cosine similarity ≥ 0.363. Both thresholds are demonstration defaults, not calibrated for these images. Face-API runs in the browser on the CPU backend; SFace runs in local OpenCV. Timings include different work and are not a benchmark.</p>
+<button id="run">Run comparison</button> <span id="progress" role="status">Ready.</span>
+<div class="panel"><h2>Face-API</h2><pre id="face-summary">Not run.</pre><div class="scroll"><table><thead><tr><th>Image</th><th>Intended label</th><th>Status</th><th>Euclidean distance</th><th>Detection score</th><th>Time (ms)</th></tr></thead><tbody id="face-results"></tbody></table></div></div>
+<div class="panel"><h2>YuNet + SFace</h2><pre id="sface-summary">Not run.</pre><div class="scroll"><table><thead><tr><th>Image</th><th>Intended label</th><th>Status</th><th>Cosine similarity</th><th>Detection score</th><th>Time (ms)</th></tr></thead><tbody id="sface-results"></tbody></table></div></div>
+</body>
+</html>

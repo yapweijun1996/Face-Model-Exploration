@@ -1,0 +1,14 @@
+{
+  "name": "face-api-wasm-comparison",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "face-wasm": "node face-wasm.js"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "4.22.0",
+    "@vladmandic/face-api": "1.7.15",
+    "pngjs": "5.0.0"
+  }
+}

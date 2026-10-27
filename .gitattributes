@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Preserve bytes used by saved comparison SHA-256 values.
+/multi-person/manifest.csv -text
+/comparison/multi-person-results/multi-comparison-2026-10-27T09-34-58-670808Z.json -text

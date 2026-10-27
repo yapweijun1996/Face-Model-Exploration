@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-person face comparison</title>
+<style>
+body{font:16px system-ui,sans-serif;color:#172232;background:#f5f7fa;max-width:1350px;margin:2rem auto;padding:0 1rem}p{line-height:1.5}.notice{background:#fff1cf;padding:1rem;border-radius:8px}.box{background:white;border:1px solid #d9e2ee;border-radius:8px;padding:1rem;margin:1rem 0}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{padding:.5rem;border-bottom:1px solid #d9e2ee;text-align:left;vertical-align:top}th{background:#edf2f6}select{font:inherit;padding:.4rem;margin:.3rem 1rem .3rem 0}.muted{color:#485d76}details{margin:1rem 0}code{overflow-wrap:anywhere}.thumb{display:block;width:100px;height:100px;object-fit:cover;border-radius:6px;margin-bottom:.3rem}.metrics{display:flex;gap:12px;flex-wrap:wrap}.metric{flex:1;min-width:240px;background:#f5f7fa;border-radius:8px;padding:12px}.metric h3{margin:0 0 .5rem}.metric p{margin:.3rem 0}
+.review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}.review-card{border:1px solid #d9e2ee;border-radius:8px;padding:12px}.review-photos{display:flex;gap:8px}.review-photos figure{margin:0;min-width:0;flex:1}.review-photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px}.review-photos figcaption{font-size:.75rem;overflow-wrap:anywhere}.review-card p{margin:.35rem 0;font-size:.9rem}.review-controls button{font:inherit;padding:.4rem .8rem;margin:.3rem}.review-controls button:disabled{opacity:.45}
+</style>
+</head>
+<body>
+<h1>Multi-person face comparison</h1>
+<p class="notice">Exploratory synthetic dataset: all intended identity labels are unverified. No separate calibration and evaluation sets are assumed. These results do not establish accuracy, liveness or security; the two runtimes and scores are not a fair speed comparison.</p>
+<div class="box"><h2>Run information</h2><p id="summary"></p><div class="metrics" id="metrics"></div><p class="muted">Percentages use scored comparisons. Different-person matches are potential false matches only if intended labels are correct. Pairs share photos and identities and are not statistically independent.</p><p>Face-API WASM: Euclidean distance ≤ 0.6; lower is closer. SFace: cosine similarity ≥ 0.363; higher is closer. These example thresholds are not calibrated for this dataset and scores are not probabilities.</p><div id="warnings"></div><details><summary>Provenance and settings</summary><pre id="provenance"></pre></details></div>
+<div class="box"><h2>Review different-person matches</h2><p>Each pair is generated under different intended identity labels. A model match and visual resemblance do not establish identity; review remains pending.</p><div class="review-controls"><label for="review-filter">Show</label><select id="review-filter"><option value="both">Both engines matched</option><option value="face">Only Face-API matched</option><option value="sface">Only SFace matched</option><option value="either">Either engine matched</option></select><button id="review-prev" type="button">Previous</button><button id="review-next" type="button">Next</button></div><p id="review-status" role="status"></p><div id="review-grid" class="review-grid"></div></div>
+<div class="box"><h2>Image detection and labels</h2><p>Each row is a manifest image; detection failures and missing labels remain visible.</p><div class="scroll"><table><thead><tr><th>Line / image</th><th>Intended identity / role</th><th>Scenario / identity review</th><th>Face-API WASM</th><th>SFace</th><th>Manifest issues</th></tr></thead><tbody id="images"></tbody></table></div></div>
+<div class="box"><h2>Probe against enrollment identities</h2><label for="person">Probe identity</label><select id="person"><option value="">All identities</option></select><label for="relation">Intended relationship</label><select id="relation"><option value="">All relationships</option><option>intended same</option><option>intended different</option><option>unknown: missing identity label</option></select><p id="count" role="status"></p><div class="scroll"><table><thead><tr><th>Probe</th><th>Enrollment</th><th>Intended relationship</th><th>Face-API WASM distance</th><th>SFace similarity</th></tr></thead><tbody id="pairs"></tbody></table></div></div>
+<script>
+'use strict';
+const result = /* RESULT_DATA */ null;
+const byId = id => document.getElementById(id);
+const cell = (tr, value) => { const td = document.createElement('td'); td.textContent = value; tr.append(td); };
+const status = row => `${row.status}${row.faces ? ` (${row.faces})` : ''}${row.error ? `: ${row.error}` : ''}${Number.isFinite(row.detection_score) ? `; confidence ${row.detection_score.toFixed(3)}` : ''}`;
+const outcome = row => row.status === 'unavailable' ? `Unavailable: ${row.reason}` : `${row.score.toFixed(4)} · ${row.status}`;
+if (!result) { byId('summary').textContent = 'This is a report template. Run multi-compare.py to generate a report.'; }
+else {
+  byId('summary').textContent = `${result.manifest.length} manifest images; ${result.comparisons.length} comparisons. Face-API backend: ${result.engines.face_wasm.backend}; SFace backend: ${result.engines.sface.backend}.`;
+  for (const [key, title] of [['face_wasm', 'Face-API WASM'], ['sface', 'YuNet + SFace']]) {
+    const panel = document.createElement('div'); panel.className = 'metric';
+    const heading = document.createElement('h3'); heading.textContent = title; panel.append(heading);
+    for (const relation of ['intended same', 'intended different']) {
+      const all = result.comparisons.filter(pair => pair.relation === relation);
+      const scored = all.filter(pair => ['matched', 'not matched'].includes(pair.engines[key].status));
+      const matches = scored.filter(pair => pair.engines[key].status === 'matched').length;
+      const line = document.createElement('p');
+      const rate = scored.length ? `${(100 * matches / scored.length).toFixed(1)}%` : 'unavailable';
+      line.textContent = `${relation}: ${matches}/${scored.length} matched (${rate}); ${all.length - scored.length} unavailable`;
+      panel.append(line);
+    }
+    byId('metrics').append(panel);
+  }
+  let reviewPage = 0;
+  const category = pair => {
+    if (![pair.engines.face_wasm.status, pair.engines.sface.status].every(status => ['matched', 'not matched'].includes(status))) return 'incomplete';
+    const face = pair.engines.face_wasm.status === 'matched';
+    const sface = pair.engines.sface.status === 'matched';
+    return face && sface ? 'both' : face ? 'face' : sface ? 'sface' : 'neither';
+  };
+  function renderReview() {
+    const filter = byId('review-filter').value;
+    const candidates = result.comparisons.filter(pair => pair.relation === 'intended different' && (filter === 'either' ? ['both', 'face', 'sface'].includes(category(pair)) : category(pair) === filter));
+    const pageSize = 12, pages = Math.max(1, Math.ceil(candidates.length / pageSize));
+    reviewPage = Math.max(0, Math.min(reviewPage, pages - 1));
+    byId('review-prev').disabled = reviewPage === 0; byId('review-next').disabled = reviewPage === pages - 1;
+    byId('review-status').textContent = `${candidates.length} comparisons; page ${reviewPage + 1} of ${pages}. Repeated photos and identities are not independent.`;
+    const grid = byId('review-grid'); grid.replaceChildren();
+    for (const pair of candidates.slice(reviewPage * pageSize, (reviewPage + 1) * pageSize)) {
+      const card = document.createElement('article'); card.className = 'review-card';
+      const photos = document.createElement('div'); photos.className = 'review-photos';
+      for (const [kind, name] of [['Probe', pair.probe_image], ['Reference', pair.enrollment_image]]) {
+        const figure = document.createElement('figure');
+        if (/^images\/person-(?:0[1-9]|1[0-9]|20)-0[1-5]\.png$/.test(name || '')) {
+          const photo = document.createElement('img'); photo.loading = 'lazy'; photo.alt = `${kind}: ${name}`;
+          photo.src = location.protocol === 'file:' ? `../../multi-person/${name}` : `/multi-person/${name}`; figure.append(photo);
+        }
+        const caption = document.createElement('figcaption'); caption.textContent = `${kind}: ${name || 'unavailable'}`; figure.append(caption); photos.append(figure);
+      }
+      card.append(photos);
+      for (const [key, title] of [['face_wasm', 'Face-API distance'], ['sface', 'SFace similarity']]) {
+        const line = document.createElement('p'); line.textContent = `${title}: ${outcome(pair.engines[key])}`; card.append(line);
+      }
+      grid.append(card);
+    }
+  }
+  byId('review-filter').addEventListener('change', () => { reviewPage = 0; renderReview(); });
+  byId('review-prev').addEventListener('click', () => { reviewPage--; renderReview(); });
+  byId('review-next').addEventListener('click', () => { reviewPage++; renderReview(); });
+  renderReview();
+  byId('provenance').textContent = JSON.stringify({manifest_sha256: result.manifest_sha256, model_sha256: result.model_sha256, settings: result.settings, face_api: result.engines.face_wasm.face_api, tfjs: result.engines.face_wasm.tfjs, node: result.engines.face_wasm.node, opencv: result.engines.sface.opencv}, null, 2);
+  const warnings = byId('warnings');
+  if (result.warnings.length) { const title = document.createElement('strong'); title.textContent = 'Dataset warnings'; warnings.append(title); const list = document.createElement('ul'); for (const warning of result.warnings) { const li = document.createElement('li'); li.textContent = warning; list.append(li); } warnings.append(list); }
+  result.manifest.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    const imageCell = document.createElement('td');
+    if (/^images\/person-(?:0[1-9]|1[0-9]|20)-0[1-5]\.png$/.test(row.image) && row.file_status === 'present') {
+      const image = document.createElement('img'); image.className = 'thumb'; image.loading = 'lazy'; image.alt = `Synthetic sample ${row.image}`;
+      image.src = location.protocol === 'file:' ? `../../multi-person/${row.image}` : `/multi-person/${row.image}`; imageCell.append(image);
+    }
+    const imageLabel = document.createElement('span'); imageLabel.textContent = `${row.line} · ${row.image || '(missing image label)'} · ${row.file_status}`; imageCell.append(imageLabel); tr.append(imageCell); cell(tr, `${row.person_id || '(missing identity)'} · ${row.role || '(missing role)'}`);
+    cell(tr, `${row.scenario || '(missing scenario)'} · ${row.identity_review || '(missing review label)'}; intended identity unverified`);
+    cell(tr, status(result.engines.face_wasm.rows[i])); cell(tr, status(result.engines.sface.rows[i])); cell(tr, row.issues.join('; ') || '—'); byId('images').append(tr);
+  });
+  for (const name of [...new Set(result.comparisons.map(pair => pair.probe_person_id).filter(Boolean))].sort()) { const option = document.createElement('option'); option.value = name; option.textContent = name; byId('person').append(option); }
+  function render() {
+    const selected = result.comparisons.filter(pair => (!byId('person').value || pair.probe_person_id === byId('person').value) && (!byId('relation').value || pair.relation === byId('relation').value));
+    const target = byId('pairs'); target.replaceChildren();
+    for (const pair of selected) { const tr = document.createElement('tr'); cell(tr, `${pair.probe_person_id || '(missing identity)'} · ${pair.probe_image || '(missing image)'}`); cell(tr, `${pair.enrollment_person_id || '(missing identity)'} · ${pair.enrollment_image || '(missing enrollment)'}`); cell(tr, `${pair.relation} · unverified`); cell(tr, outcome(pair.engines.face_wasm)); cell(tr, outcome(pair.engines.sface)); target.append(tr); }
+    byId('count').textContent = `Showing ${selected.length} of ${result.comparisons.length} comparisons.`;
+  }
+  byId('person').addEventListener('change', render); byId('relation').addEventListener('change', render); render();
+}
+</script>
+</body>
+</html>

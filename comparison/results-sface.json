@@ -1,0 +1,285 @@
+{
+  "rows": [
+    {
+      "image": "face-01.png",
+      "detection_score": 0.9553570747375488,
+      "status": "enrolled",
+      "ms": 168.3
+    },
+    {
+      "image": "face-02.png",
+      "detection_score": 0.9509950280189514,
+      "score": 0.8747763696283073,
+      "status": "matched",
+      "ms": 103.6
+    },
+    {
+      "image": "face-03.png",
+      "detection_score": 0.9513334631919861,
+      "score": 0.8861133956643243,
+      "status": "matched",
+      "ms": 112.4
+    },
+    {
+      "image": "face-04.png",
+      "detection_score": 0.9544503688812256,
+      "score": 0.8667886287898909,
+      "status": "matched",
+      "ms": 96.3
+    },
+    {
+      "image": "face-05.png",
+      "detection_score": 0.953940212726593,
+      "score": 0.8629391761419356,
+      "status": "matched",
+      "ms": 97.7
+    },
+    {
+      "image": "face-06.png",
+      "detection_score": 0.9598606824874878,
+      "score": 0.9095714084069186,
+      "status": "matched",
+      "ms": 105.3
+    },
+    {
+      "image": "face-07.png",
+      "detection_score": 0.9527443051338196,
+      "score": 0.836845117620669,
+      "status": "matched",
+      "ms": 92.3
+    },
+    {
+      "image": "face-08.png",
+      "detection_score": 0.9476540088653564,
+      "score": 0.8276029858225229,
+      "status": "matched",
+      "ms": 106.0
+    },
+    {
+      "image": "face-09.png",
+      "detection_score": 0.9531031250953674,
+      "score": 0.8586286335644218,
+      "status": "matched",
+      "ms": 101.0
+    },
+    {
+      "image": "face-10.png",
+      "detection_score": 0.9485229849815369,
+      "score": 0.8319871387102467,
+      "status": "matched",
+      "ms": 87.2
+    },
+    {
+      "image": "face-11.png",
+      "detection_score": 0.9563125371932983,
+      "score": 0.8925760318347784,
+      "status": "matched",
+      "ms": 87.7
+    },
+    {
+      "image": "face-12.png",
+      "detection_score": 0.9505047798156738,
+      "score": 0.8568322508399433,
+      "status": "matched",
+      "ms": 84.3
+    },
+    {
+      "image": "face-13.png",
+      "detection_score": 0.9532891511917114,
+      "score": 0.9433751036376634,
+      "status": "matched",
+      "ms": 105.2
+    },
+    {
+      "image": "face-14.png",
+      "detection_score": 0.9571225047111511,
+      "score": 0.9608292721891303,
+      "status": "matched",
+      "ms": 128.2
+    },
+    {
+      "image": "face-15.png",
+      "detection_score": 0.9557625651359558,
+      "score": 0.9487627418600368,
+      "status": "matched",
+      "ms": 113.5
+    },
+    {
+      "image": "face-16.png",
+      "detection_score": 0.9547603130340576,
+      "score": 0.9033722695717188,
+      "status": "matched",
+      "ms": 132.9
+    },
+    {
+      "image": "face-17.png",
+      "detection_score": 0.9509636163711548,
+      "score": 0.8500931903879518,
+      "status": "matched",
+      "ms": 109.9
+    },
+    {
+      "image": "face-18.png",
+      "detection_score": 0.9550325870513916,
+      "score": 0.9474844707146985,
+      "status": "matched",
+      "ms": 98.0
+    },
+    {
+      "image": "face-19.png",
+      "detection_score": 0.9474116563796997,
+      "score": 0.9402158327366124,
+      "status": "matched",
+      "ms": 88.4
+    },
+    {
+      "image": "face-20.png",
+      "detection_score": 0.950798749923706,
+      "score": 0.9169139689088297,
+      "status": "matched",
+      "ms": 188.6
+    },
+    {
+      "image": "face-21.png",
+      "detection_score": 0.9544551372528076,
+      "score": 0.9094642327017937,
+      "status": "matched",
+      "ms": 270.8
+    },
+    {
+      "image": "face-22.png",
+      "detection_score": 0.9525396823883057,
+      "score": 0.8961964053160045,
+      "status": "matched",
+      "ms": 161.9
+    },
+    {
+      "image": "face-23.png",
+      "detection_score": 0.956489622592926,
+      "score": 0.9409819671434434,
+      "status": "matched",
+      "ms": 250.7
+    },
+    {
+      "image": "face-24.png",
+      "detection_score": 0.9551331400871277,
+      "score": 0.8599991418177524,
+      "status": "matched",
+      "ms": 610.0
+    },
+    {
+      "image": "face-25.png",
+      "detection_score": 0.9535208940505981,
+      "score": 0.8675237202151038,
+      "status": "matched",
+      "ms": 258.0
+    },
+    {
+      "image": "face-26.png",
+      "detection_score": 0.9497628211975098,
+      "score": 0.8401936038962958,
+      "status": "matched",
+      "ms": 239.0
+    },
+    {
+      "image": "face-27.png",
+      "detection_score": 0.9558819532394409,
+      "score": 0.9175592647384292,
+      "status": "matched",
+      "ms": 290.7
+    },
+    {
+      "image": "face-28.png",
+      "detection_score": 0.95260089635849,
+      "score": 0.9229567999232131,
+      "status": "matched",
+      "ms": 176.6
+    },
+    {
+      "image": "face-29.png",
+      "detection_score": 0.9489412903785706,
+      "score": 0.9231881841496943,
+      "status": "matched",
+      "ms": 188.2
+    },
+    {
+      "image": "face-30.png",
+      "detection_score": 0.9515450596809387,
+      "score": 0.903272531654693,
+      "status": "matched",
+      "ms": 309.6
+    },
+    {
+      "image": "negative-01.png",
+      "detection_score": 0.9544872641563416,
+      "score": 0.3202491858955909,
+      "status": "not matched",
+      "ms": 244.6
+    },
+    {
+      "image": "negative-02.png",
+      "detection_score": 0.9536625146865845,
+      "score": 0.2640080369019415,
+      "status": "not matched",
+      "ms": 176.5
+    },
+    {
+      "image": "negative-03.png",
+      "detection_score": 0.9525500535964966,
+      "score": 0.3251598352289875,
+      "status": "not matched",
+      "ms": 298.1
+    },
+    {
+      "image": "negative-04.png",
+      "detection_score": 0.9504906535148621,
+      "score": 0.21366473694206434,
+      "status": "not matched",
+      "ms": 335.2
+    },
+    {
+      "image": "negative-05.png",
+      "detection_score": 0.9502667784690857,
+      "score": 0.19151154638984735,
+      "status": "not matched",
+      "ms": 306.5
+    },
+    {
+      "image": "negative-06.png",
+      "detection_score": 0.9504663348197937,
+      "score": 0.37496240632390254,
+      "status": "matched",
+      "ms": 168.2
+    },
+    {
+      "image": "negative-07.png",
+      "detection_score": 0.9523749947547913,
+      "score": 0.5204609645643359,
+      "status": "matched",
+      "ms": 173.5
+    },
+    {
+      "image": "negative-08.png",
+      "detection_score": 0.9512486457824707,
+      "score": 0.5247258618037449,
+      "status": "matched",
+      "ms": 255.2
+    },
+    {
+      "image": "negative-09.png",
+      "detection_score": 0.9533383846282959,
+      "score": 0.559464198945534,
+      "status": "matched",
+      "ms": 159.2
+    },
+    {
+      "image": "negative-10.png",
+      "detection_score": 0.9515581130981445,
+      "score": 0.3057932293424983,
+      "status": "not matched",
+      "ms": 134.6
+    }
+  ],
+  "elapsed_ms": 7394.0,
+  "opencv": "5.0.0"
+}
